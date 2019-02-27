@@ -83,4 +83,21 @@ describe 'タスク管理機能', type: :system do
 
   end
 
+  describe '編集機能' do
+    let(:login_user) {user_a}
+
+    before do
+      visit edit_task_path(task_a)
+      fill_in '名称', with: 'new name'
+      fill_in '詳しい説明', with: 'new detail'
+      click_button '更新する'
+      visit task_path(task_a)
+    end
+
+    it do
+      expect(page).to have_content 'new name'
+      expect(page).to have_content 'new detail'
+    end
+  end
+
 end
