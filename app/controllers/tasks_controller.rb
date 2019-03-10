@@ -8,7 +8,8 @@ class TasksController < ApplicationController
     @tasks = current_user.tasks.order(created_at: :desc)
   end
 
-  def show; end
+  def show;
+  end
 
   def new
     @task = Task.new
@@ -16,6 +17,12 @@ class TasksController < ApplicationController
 
   def create
     @task = current_user.tasks.new(task_params)
+
+    if params[:back].present?
+      render :new
+      return
+    end
+
     if @task.save
       redirect_to tasks_url, notice: "タスク「#{@task.name}」を登録しました。"
     else
@@ -23,7 +30,8 @@ class TasksController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit;
+  end
 
   def update
     if @task.update(task_params)
@@ -36,6 +44,11 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     redirect_to tasks_url, notice: "タスク「#{@task.name}」を削除しました。"
+  end
+
+  def confirm_new
+    @task = current_user.tasks.new(task_params)
+    render :new unless @task.valid?
   end
 
   private
